@@ -1,6 +1,14 @@
 #include <iostream>
 #include <limits>
 
+
+//本算法错误
+//原因见下面思路2分析, 因为在最大累加和中可以拆分掉负数，然后
+//两个子数组最大累加和会出现在此间
+//
+//正确版本: 
+//accumulate_sum_questions/tow_subarr_max_sum.cc
+
 /*
  * 求两个子数组最大的累加和
  * 【题目】
@@ -11,16 +19,22 @@
  * 思路1：利用获得数组中最大累加和子数组的算法M
  * 将数组分为2个子数组，每个子数组做算法M求最大和 0(N*N)
  *
- * 思路2：先找出最大累加和sum1子数组及其位置 start,end
+ * 思路2： 错误思路
+ * 先找出最大累加和sum1子数组及其位置 start,end
  * 然后在0-start ,end-arr_sz中再次找一个最大累加和子数组sum2
  * if (sum2 > 0) return sum1+sum2; 
  * else return sum1;
+ *
+ * 思路3：
+ * 构造sum数组，从左至右构造 再从右至左构造
+ * 那么 得到arr[0---i] 与 arr[i+1---end]的最大值即可
  */
 
 using namespace std;
 
 #define INT_MIN numeric_limits<int>::min()
 
+/*
 int getMaxSubarrSum(int *arr, int sz, int *start, int *end) {
     int sum = arr[0];
     int maxsum = sum;
@@ -61,15 +75,16 @@ void test_getMSS() {
              << "please cin arr sz: ";
     }
 }
-
+*/
+/*  ERROR
 int getMaxTwoSubarrSum(int arr[], int sz) {
-/*
+*
  * ERROR
  * [1, -1, 0, -2, 3, 5, -2, 8, 7, -4]
  * 两个子数组： [3, 5] [8, 7]
  * 但是使用此算法 为 [1], [3, 5, -2, 8, 7]
  * 故而是错误
- */
+ *
     if (sz < 2) return INT_MIN;
     if (sz == 2) return arr[0] + arr[1];
 
@@ -99,6 +114,8 @@ int getMaxTwoSubarrSum(int arr[], int sz) {
     else
         return sum_max + sum_less;
 }
+*/
+
 
 void run() {
     int arr[100] = {0};

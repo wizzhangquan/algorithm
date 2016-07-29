@@ -7,3 +7,14 @@
  * 【要求】
  *  时间复杂度达到O(N)
  */
+
+using namespace std;
+
+int getTwoSubarrMaxSum(int arr[], int sz) {
+
+
+}
+
+int main() {
+
+}
