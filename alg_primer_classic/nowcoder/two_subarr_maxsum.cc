@@ -63,6 +63,13 @@ void test_getMSS() {
 }
 
 int getMaxTwoSubarrSum(int arr[], int sz) {
+/*
+ * ERROR
+ * [1, -1, 0, -2, 3, 5, -2, 8, 7, -4]
+ * 两个子数组： [3, 5] [8, 7]
+ * 但是使用此算法 为 [1], [3, 5, -2, 8, 7]
+ * 故而是错误
+ */
     if (sz < 2) return INT_MIN;
     if (sz == 2) return arr[0] + arr[1];
 
