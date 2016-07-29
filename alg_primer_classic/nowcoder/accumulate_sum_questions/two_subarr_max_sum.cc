@@ -20,7 +20,6 @@ const int int_min = numeric_limits<int>::min();
 int getTwoSubarrMaxSum(int arr[], int sz) {
     int maxsubarr[sz]; 
     int sum = arr[0];
-
     maxsubarr[0] = sum;
     for (int r=1; r<sz; ++r) {
         if (sum < 0)
@@ -33,7 +32,7 @@ int getTwoSubarrMaxSum(int arr[], int sz) {
     sum = arr[sz-1];
     maxsubarr[sz-1] = sum;
     int twosub_sum = int_min;
-    for (int l=sz-2; l>0; --l) {
+    for (int l=sz-2; l>=0; --l) {
         twosub_sum = max(twosub_sum,
             maxsubarr[l+1] + maxsubarr[l]);
         
@@ -54,6 +53,10 @@ void run() {
     cout << "please cin arr sz: ";
     
     while (cin >> sz && sz > 0) {
+        if (sz < 2) {
+            cout << "please cin sz > 2";
+            continue;
+        }
         cout << "please cin arr:" << endl;
         for (int i=0; i<sz; ++i) cin >> arr[i];
         cout << "get two subarr max sum: "
