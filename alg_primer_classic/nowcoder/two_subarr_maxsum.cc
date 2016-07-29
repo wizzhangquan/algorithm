@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 
 /*
  * 求两个子数组最大的累加和
@@ -18,12 +19,14 @@
 
 using namespace std;
 
+#define INT_MIN numeric_limits<int>::min()
+
 int getMaxSubarrSum(int *arr, int sz, int *start, int *end) {
     int sum = arr[0];
     int maxsum = sum;
-    *start = 0;
-    *end = 0;
+    int m_start = 0, m_end = 0;
     int l = 0, r = 0;
+
     for (int i=1; i<sz; ++i) {
         if (sum <= 0) {
             sum = arr[i];
@@ -32,10 +35,13 @@ int getMaxSubarrSum(int *arr, int sz, int *start, int *end) {
         else
             sum += arr[i];
         if (maxsum < sum) {
-            *start = l;
-            *end = i+1;
+            maxsum = sum;
+            m_start = l;
+            m_end = i+1;
         }
     }
+    if (start != NULL) *start = m_start;
+    if (end != NULL) *end = m_end;
     return maxsum;
 }
 
@@ -57,10 +63,52 @@ void test_getMSS() {
 }
 
 int getMaxTwoSubarrSum(int arr[], int sz) {
-    return 0;    
+    if (sz < 2) return INT_MIN;
+    if (sz == 2) return arr[0] + arr[1];
+
+    int start, end;
+    int sum_max = 
+        getMaxSubarrSum(arr, sz, &start, &end);
+
+    int sum_less = INT_MIN;
+    if (start > 0) {
+        sum_less = 
+            getMaxSubarrSum(arr, start, NULL, NULL); 
+    }
+
+    if (end < sz) {
+        int sum_less_end =
+            getMaxSubarrSum(arr+end, sz-end, NULL, NULL);
+        sum_less = 
+            sum_less > sum_less_end ? sum_less : sum_less_end;
+    }
+     
+    cout << endl;
+    cout << "First max sum: " << sum_max
+         << "   Second max sum: " << sum_less << endl; 
+    
+    if (sum_less < 0 && (end - start != 1))
+        return sum_max;
+    else
+        return sum_max + sum_less;
+}
+
+void run() {
+    int arr[100] = {0};
+    int sz = -1;
+    cout << "please cin arr sz: ";
+    while (cin >> sz && sz > 0) {
+        cout << "please cin arr:" << endl;
+        for (int i=0; i<sz; ++i) cin >> arr[i];
+        cout << "get the two max subarr's sum : "
+             << getMaxTwoSubarrSum(arr, sz) 
+             << endl
+             << "-------------" << endl
+             << "please cin arr sz: ";
+    }   
 }
 
 int main() {
-    test_getMSS();
+    run();
     return 0;
 }
