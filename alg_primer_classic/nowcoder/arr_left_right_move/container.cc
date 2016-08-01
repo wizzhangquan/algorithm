@@ -22,6 +22,7 @@ using namespace std;
 
 class Solution {
 public:
+    //更好解法可以不使用辅助数组
     int maxArea(vector<int> &height) {
         vector<int> left_max_arr;
         vector<int> right_max_arr;
@@ -42,7 +43,8 @@ public:
         for_each(height.crbegin(), height.crend(),
             [&biggest, &right_max_arr] (const int &n) -> void 
             { biggest = max(biggest, n);
-              right_max_arr.push_back(biggest); //vector donnt has push_front
+              right_max_arr.push_back(biggest); 
+              //vector donnt has push_front
         });
         
         cout << "show the right_max_arr: ";
