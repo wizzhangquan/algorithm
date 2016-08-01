@@ -28,13 +28,35 @@ public:
 
         int biggest = -1;
 
-        for_each(height.begin(), height.end(),
+        for_each(height.cbegin(), height.cend(),
             [&biggest, &left_max_arr](const int &n) -> void 
             { biggest = max(biggest, n);
-              left_max_arr.push_back(biggest); });
+              left_max_arr.push_back(biggest); 
+        });
 
-        cout << "show the lefte_max_arr: ";
+        cout << "show the left_max_arr: ";
         show_arr(left_max_arr);
+
+        //这里将使用反向迭代器
+        biggest = -1;
+        for_each(height.crbegin(), height.crend(),
+            [&biggest, &right_max_arr] (const int &n) -> void 
+            { biggest = max(biggest, n);
+              right_max_arr.push_back(biggest); //vector donnt has push_front
+        });
+        
+        cout << "show the right_max_arr: ";
+        show_arr(right_max_arr);
+
+        int area = 0;
+        int less_height = 0;
+        auto left_iter = left_max_arr.cbegin();
+        auto right_iter = right_max_arr.crbegin();
+        for (const auto height_iter : height) {
+            less_height = min(*left_iter++, *right_iter++);
+            area += less_height - height_iter;
+        }
+        return area;
     }
 
 private:
@@ -51,11 +73,12 @@ public:
     in_out_data() = default;
 
     void in_data() {
-        cout << "please cin num(>=0) : ";
+        cout << "please cin num(>=0) (-1 means end)" 
+             << endl << "=> ";
         int num;
         while (cin >> num && num >= 0) {
             data.push_back(num);
-            cout << "please cin num(>=0) : ";
+            //cout << "please cin num(>=0) : ";
         }
     }
 
@@ -73,7 +96,9 @@ void run(void) {
     while (true) {
         in_out_data iotest;
         iotest.in_data();
-        s.maxArea(iotest.get_data());
+        cout << "get max area is: "
+             << s.maxArea(iotest.get_data())
+             << endl;
     }
 }
 
