@@ -36,8 +36,6 @@ public:
         }
     }
 
-
- 
     vector<env >& get_data() {
         return envelopes_;
     }
@@ -45,13 +43,17 @@ public:
     void show_envs() {
         cout << "show the sorted envs: " << ends;
         for(vector<pair<int, int> >::iterator wh = envelopes_.begin();
-                wh != envelopes_.end(); ++wh)
+                wh != envelopes_.end(); ++wh) {
             cout << "[" << wh->first
-                 << ", " << wh->second << "]  =>  ";
+                 << ", " << wh->second << "]  ";
+            if (wh+1 != envelopes_.end())
+            cout << "=>  ";
+        }
         cout << endl;
     }
 
     //这里必须是static，不然传入sort会发生错误
+    //如果是本类非static成员函数，会有一个隐藏的函数参数this
     static bool increment_compare(const env &a, const env &b) {
         //important
         if (a.first != b.first) //w升序
