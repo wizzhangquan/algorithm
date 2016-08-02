@@ -21,7 +21,7 @@
  *
  * eg: 0,1,0,3,2,1,0,1,2 => 5
  */
-//i wanner use C++11
+//I wanner use C++11
 
 using namespace std;
 
