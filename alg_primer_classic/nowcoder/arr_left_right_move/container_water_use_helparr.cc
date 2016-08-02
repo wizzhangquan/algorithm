@@ -3,18 +3,6 @@
 #include <vector>
 
 /*
- * leetcode 11
- * Container With Most Water
- *
- * Given n non-negative integers a1, a2, ..., an,
- * where each represents a point at coordinate (i, ai). 
- * n vertical lines are drawn such that the two 
- * endpoints of line i is at (i, ai) and (i, 0). 
- * Find two lines, which together with x-axis forms 
- * a container, such that the container contains the most water.
- *
- */
-/*
  * 插水坑问题
  * 按照a[i]的值形成其值高度的，1为宽度的柱子，形成一个容器
  * 求容器最大蓄水值
