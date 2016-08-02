@@ -19,6 +19,8 @@
  *         | | |
  *     _|__|_|_|_
  *     这里的bar没有宽度 和 前面2题不一样
+ *
+ * leetcode : Accept
  */
 
 using namespace std;
