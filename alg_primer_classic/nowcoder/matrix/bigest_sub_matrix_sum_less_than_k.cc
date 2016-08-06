@@ -23,14 +23,22 @@ struct subMatrixArea {
 
     
     void showSubMatrix(const vector<vector<int>> &originalMatrix) {
+        cout << "maxarea:" << maxarea
+             << " topLeft:[" << topLeft.first << ","
+             << topLeft.second << "]  "
+             << "length:" << length
+             << " width:" << width
+             << endl;
         
         for (int vert = topLeft.second; 
                 vert!=topLeft.second+width; ++vert) {
+            const vector<int> &curRow = originalMatrix[vert];
             for (int horizon = topLeft.first;
                 horizon != topLeft.first+length; ++horizon)
-                cout << originalMatrix[horizon][vert] << " ";
+                cout << curRow[horizon] << " ";
             cout << endl;
         }
+       
     }
     
 };
@@ -56,11 +64,12 @@ public:
                 auto range = getLongestSubLess(sumRow);
                 int area = (range.second - range.first)*(j+1-i);
                 if (area > maxarea) {
+                    maxarea = area;
                     retArea.topLeft.first = range.first;
                     retArea.topLeft.second = i;
                     retArea.length = range.second - range.first;
                     retArea.width = j+1-i;
-                    retArea.maxarea = area;
+                    retArea.maxarea = maxarea;
                 }
             }
         }
@@ -159,15 +168,26 @@ public:
         }
     }
     
-    
 private:
     int length;
     int width;
     vector<vector<int>> matrix;
 };
 
+void run() {
+    InOutMatrix iom;
+    int k;    
+    iom.in_data();
+    cout << "please cin the k:";
+    cin >> k;
+    FindSubMatrix fsm;
+    auto subm = fsm.getBiggestSubMatrix(iom.getMatrix(), k);
+    cout << "let us show show the max sub matrix which sum less " 
+         << k << ":" << endl;
+    subm.showSubMatrix(iom.getMatrix());
+}
+
 int main() {
-    FindSubMatrix m;
-    m.test_getLongestSubLess();    
+    run();
     return 0;
 }
