@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <limits>
 
 /*
  * 给定一个无序矩阵，其中有正有负有0，再给定一个值k，
@@ -9,23 +10,61 @@
 
 using namespace std;
 
+const int INTMIN = numeric_limits<int>::min();
+
+struct subMatrixArea {
+    subMatrixArea() : 
+        topLeft(0,0), length(0), width(0), maxarea(0) { } 
+
+    pair<int, int> topLeft;
+    int length;
+    int width;
+    int maxarea;
+
+    
+    void showSubMatrix(const vector<vector<int>> &originalMatrix) {
+        
+        for (int vert = topLeft.second; 
+                vert!=topLeft.second+width; ++vert) {
+            for (int horizon = topLeft.first;
+                horizon != topLeft.first+length; ++horizon)
+                cout << originalMatrix[horizon][vert] << " ";
+            cout << endl;
+        }
+    }
+    
+};
+
 class FindSubMatrix {
 public:
-    int getBiggestSubMatrix(const vector<vector<int>> &matrix, int k) {
-        if (matrix.empty()) return 0;
+
+    subMatrixArea getBiggestSubMatrix(const vector<vector<int>> &matrix, int k) {
+        subMatrixArea retArea;
+        if (matrix.empty()) return retArea;
         
         k_ = k;
         vector<int> sumRow;
+        int maxarea = 0;
         for (int i=0; i<matrix.size(); ++i) {
             for (int j=i; j<matrix.size(); ++j) {
                 const vector<int> &curRow = matrix[j];
                 if (j == i)
                     sumRow.assign(curRow.begin(), curRow.end());
                 else 
-                    for (int ci=0; ci!=curRow.size(); ++ci) sumRow[ci] += curRow[ci];
-                
+                    for (int ci=0; ci!=curRow.size(); ++ci) 
+                        sumRow[ci] += curRow[ci];
+                auto range = getLongestSubLess(sumRow);
+                int area = (range.second - range.first)*(j+1-i);
+                if (area > maxarea) {
+                    retArea.topLeft.first = range.first;
+                    retArea.topLeft.second = i;
+                    retArea.length = range.second - range.first;
+                    retArea.width = j+1-i;
+                    retArea.maxarea = area;
+                }
             }
         }
+        return retArea;
     }
 
     void test_getLongestSubLess(void) {
@@ -82,13 +121,14 @@ private:
         return range;
     }
 
-    pair<int, int> position;
-    int length;
-    int width;
+
+    //pair<int, int> position;
+    //int length;
+    //int width;
     int k_;
 };
 
-class InOutData {
+class InOutMatrix {
 public:
     void in_data() {
         cout << "please enter length: ";
@@ -118,6 +158,7 @@ public:
             cout << endl;
         }
     }
+    
     
 private:
     int length;
