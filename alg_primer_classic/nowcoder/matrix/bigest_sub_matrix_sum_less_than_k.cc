@@ -29,15 +29,22 @@ public:
     }
 
     void test_getLongestSubLess(void) {
+        int sz;
+        cout << "please cin sz: ";
+        cin >> sz;
         cout << "please cin arr elements:" << endl;
-        int n;
         vector<int> arr;
-        while (cin>>n) arr.push_back(n);
+        int n;
+        for (int i=0; i<sz; ++i) {
+            cin >> n; arr.push_back(n);
+        } 
         cout << "please cin k:";
         cin >> k_;
         auto range = getLongestSubLess(arr);
         cout << "now show the subarr which sum <= " << k_
              << ":" << endl;
+        cout << "range: (" << range.first
+             << ", " << range.second << ")" << endl;
         for (int i=range.first; i!=range.second; ++i)
             cout << arr[i] << " ";
         cout << endl;
@@ -47,29 +54,30 @@ public:
 private:
     //@return : longest lens of sub arr which sum less than k_
     pair<int, int> getLongestSubLess(const vector<int> &arr) {
-        const int arrsz = arr.size();
-        pair<int, int> range(0, 0);
-
-        if (arrsz == 0) return range;
-
-        if (arrsz == 1)
-            if (arr[0] <= k_) return make_pair(0,1);
-            else return range;
+        pair<int, int> range(0,0);
+        if (arr.empty()) return range;
+        
+        vector<int> helpArr;
+        int diff, sum = 0;
  
-        vector<int> helpArr;//储存当前i的最大连续子序列和
-        int sum = arr[0], diff, lens;
-        helpArr.push_back(arr[0]);
-        for (int i=1; i!=arrsz; ++i) {
-            sum += arr[i];
-            helpArr.push_back(max(helpArr.back(), sum));
-            diff = sum - k_;
-            auto first_i = find_if(begin(helpArr), end(helpArr), 
-                    [diff](const int &n) -> bool {return n>=diff;});
-            int first_site = first_i - helpArr.end();
-            if (i+1-first_site > range.second-range.first) {
-                range.first = first_site;
-                range.second = i+1;
+        for (int r = 0; r != arr.size(); ++r) {
+            sum += arr[r];
+            if (sum <= k_) {
+                range.first = 0; range.second = r+1;
+            }else {
+                diff = sum - k_;
+                auto first_site = 
+                    find_if(helpArr.begin(), helpArr.end(),
+                    [diff] (const int &n) { return n>=diff; });
+                int first_position = first_site - helpArr.begin();
+                if (r-first_position > range.second-range.first) {
+                    range.first = first_position+1; //important
+                    range.second = r+1;
+                }
             }
+            if (helpArr.empty())
+                helpArr.push_back(sum);
+            else helpArr.push_back(max(helpArr.back(), sum));
         }
         return range;
     }
@@ -118,5 +126,7 @@ private:
 };
 
 int main() {
+    FindSubMatrix m;
+    m.test_getLongestSubLess();    
     return 0;
 }
