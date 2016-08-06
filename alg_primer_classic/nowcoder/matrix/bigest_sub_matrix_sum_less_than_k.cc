@@ -21,7 +21,6 @@ struct subMatrixArea {
     int width;
     int maxarea;
 
-    
     void showSubMatrix(const vector<vector<int>> &originalMatrix) {
         cout << "maxarea:" << maxarea
              << " topLeft:[" << topLeft.first << ","
@@ -38,9 +37,7 @@ struct subMatrixArea {
                 cout << curRow[horizon] << " ";
             cout << endl;
         }
-       
     }
-    
 };
 
 class FindSubMatrix {

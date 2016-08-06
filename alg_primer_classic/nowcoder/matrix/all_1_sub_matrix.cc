@@ -29,12 +29,57 @@ struct subMatrixArea {
     int length;
     int width;
     int maxarea;
+
+    void showSubMatrix(const vector<vector<int>> &originalMatrix) {
+        cout << "maxarea:" << maxarea
+             << " topLeft:[" << topLeft.first << ","
+             << topLeft.second << "]  "
+             << "length:" << length
+             << " width:" << width
+             << endl;
+        
+        for (int vert = topLeft.second; 
+                vert!=topLeft.second+width; ++vert) {
+            const vector<int> &curRow = originalMatrix[vert];
+            for (int horizon = topLeft.first;
+                horizon != topLeft.first+length; ++horizon)
+                cout << curRow[horizon] << " ";
+            cout << endl;
+        }
+    }
 };
 
 class FindSubMatrix {
 public:
+    //循环构造累加数组，调用下面函数即可
+    //注意： 这里累加时，如果curRow[i]==0 => sumRow[i]=0;
+    //另外： 这里求其1的个数是正确的， 但是打印子矩阵确是有问题的
+    //但是正确的子矩阵一定在打印矩阵内部
     subMatrixArea getAllOneSubMatrix(const vector<vector<int>> &matrix) {
-    
+        vector<int> sumRow;
+        pair<int, int> range(0,0);
+        int area = 0;
+        subMatrixArea retSub;
+        for (int i=0; i!=matrix.size(); ++i) {
+            for (int j=i; j!=matrix.size(); ++j) {
+                const vector<int> &curRow = matrix[j];
+                if (j==i)
+                    sumRow.assign(curRow.begin(), curRow.end());
+                else
+                    for (int k=0; k!=curRow.size(); ++k)
+                        if (curRow[k] == 0) sumRow[k] = 0;
+                        else sumRow[k] += curRow[k];
+                area = getContinueMaxSubArea(sumRow, range);
+                if (area > retSub.maxarea) {
+                    retSub.maxarea = area;
+                    retSub.topLeft.first = range.first;
+                    retSub.topLeft.second = i;
+                    retSub.length = range.second - range.first;
+                    retSub.width = j+1-i;
+                }
+            }
+        }
+        return retSub; 
     }
     void test_getContinueMaxSubArea() {
         vector<int> arr;
@@ -76,7 +121,8 @@ private:
                 helpStack.push(r);
                 continue;
             }
-            while (helpStack.top() >= 0 && arr[helpStack.top()] >= arr[r]) {
+            while (helpStack.top() >= 0 &&
+                    arr[helpStack.top()] >= arr[r]) {
                 int topNum = arr[helpStack.top()];
                 helpStack.pop();
                 int lIndex = helpStack.top();
@@ -142,8 +188,19 @@ private:
     vector<vector<int>> matrix;
 };
 
-int main() {
+void run() {
+    InOutMatrix iom;
+    int k;    
+    iom.in_data();
     FindSubMatrix fsm;
-    fsm.test_getContinueMaxSubArea();
+    auto subm = fsm.getAllOneSubMatrix(iom.getMatrix());
+    cout << "let us show show the max sub matrix which all 1:"
+         << endl;
+    subm.showSubMatrix(iom.getMatrix());
+}
+
+
+int main() {
+    run();
     return 0;
 }
