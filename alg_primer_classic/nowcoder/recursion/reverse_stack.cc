@@ -32,6 +32,33 @@ public:
              << last << endl;
         cout << "now the stack's top: "
              << stk_.top() << endl;
+        cout << "print stack: ";
+        printStack(stk_);
+        cout << endl;
+        cout << "print stack: ";
+        printStack(stk_);
+        cout << endl;
+    }
+
+    //打印stack，但不改变其
+    void printStack(stack<T> &stk) {
+        if (stk.empty())
+            return ;
+        T &curTop = stk.top();
+        stk.pop();
+        cout << curTop << "=> ";
+        printStack(stk);
+        stk.push(curTop);
+        return ;
+    }
+
+    void ReverseStk(stack<T> &stk) {
+        if (stk.empty() || stk.size() == 1) 
+            return ;
+        T bottom = getAndRemoveLast(stk);
+        ReverseStk(stk);
+        stk.push(bottom);
+        return ;
     }
 
     //本函数利用递归将栈底元素移除并返回，
@@ -49,8 +76,6 @@ public:
             return ret;
         }
     }
-
-    
 
 private:
     stack<T> stk_;
