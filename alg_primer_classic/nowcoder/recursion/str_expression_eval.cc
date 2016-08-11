@@ -43,6 +43,8 @@ public:
         expressQueuePush(basicExpressQue, intToStr(num));
         cout << "Now show u the que: ";
         showQue(basicExpressQue);
+        cout << "Now shot u the result: ";
+        cout << computeByDeque(basicExpressQue) << endl;
     }
 
     void expressQueuePush(deque<string> &que, const string elem) {
@@ -54,15 +56,29 @@ public:
         string oper = que.back();
         if (oper == "*" || oper == "/") {
             que.pop_back();
-            int leftNum = getInt(que.back());
+            int leftNum = strToInt(que.back());
             que.pop_back();
-            int ret = oper == "*" ? leftNum*getInt(elem)
-                         : leftNum/getInt(elem);
+            int ret = oper == "*" ? leftNum*strToInt(elem)
+                         : leftNum/strToInt(elem);
              
             que.push_back(intToStr(ret));
 
         } else
             que.push_back(elem);
+    }
+
+    int computeByDeque(const deque<string> &que) {
+        int left = strToInt(que.front());
+        int right;
+        string oper;
+        for (deque<string>::const_iterator item = que.begin() + 1; 
+            item != que.end(); ) {
+            oper = *item++;
+            right = strToInt(*item++);
+            left = oper == "+" ? left+right
+                 : left-right;
+        }
+        return left;
     }
 
     void showQue(const deque<string> &que) {
@@ -72,7 +88,7 @@ public:
     }
 
 private:
-    int getInt(const string &str) {
+    int strToInt(const string &str) {
         istringstream istr(str);
         int ret;
         istr >> ret;
