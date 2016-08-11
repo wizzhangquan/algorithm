@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <deque>
 #include <sstream>
 
 /*
@@ -21,22 +22,83 @@
 
 using namespace std;
 
-int plusAndSubtraction(string &expression) {
-    //这里只有+ - 没有*/()
-    istringstream ostr(expression);    
-    int num = 0;
-    char c;
-
-    while (ostr >> c) {
-        if (c>= '0' && c <= '9') {
-            num = 10*num + c-'0';
+class ExpressionEvaluation {
+public:
+    int plusAndSubtraction(string &expression) { 
+        //这里只有+ - 没有*/()
+        istringstream ostr(expression);    
+        deque<string> basicExpressQue;
+        int num = 0;
+        char c;
+        
+        while (ostr >> c) {
+            if (c>= '0' && c <= '9') {
+                num = 10*num + c-'0';
+            }else {
+                expressQueuePush(basicExpressQue, intToStr(num));
+                expressQueuePush(basicExpressQue, charToStr(c)); 
+                num = 0;
+            }
         }
-
-
+        expressQueuePush(basicExpressQue, intToStr(num));
+        cout << "Now show u the que: ";
+        showQue(basicExpressQue);
     }
-     
-}
 
+    void expressQueuePush(deque<string> &que, const string elem) {
+        if (que.empty() || elem == "*" || elem == "/"
+            || elem == "+" || elem == "-") {
+            que.push_back(elem);
+            return ;
+        }
+        string oper = que.back();
+        if (oper == "*" || oper == "/") {
+            que.pop_back();
+            int leftNum = getInt(que.back());
+            que.pop_back();
+            int ret = oper == "*" ? leftNum*getInt(elem)
+                         : leftNum/getInt(elem);
+             
+            que.push_back(intToStr(ret));
+
+        } else
+            que.push_back(elem);
+    }
+
+    void showQue(const deque<string> &que) {
+        for (auto s : que)
+            cout << s << " ";
+        cout << endl;
+    }
+
+private:
+    int getInt(const string &str) {
+        istringstream istr(str);
+        int ret;
+        istr >> ret;
+        return ret;
+    }
+    string intToStr(const int num) {
+        ostringstream ostr;
+        ostr << num;
+        return ostr.str();
+    }
+    string charToStr(const char oper) {
+        ostringstream ostr;
+        ostr << oper;
+        return ostr.str();
+    }
+};
+
+void run() {
+    cout << "Please enter expression:" << endl;
+    string expression;
+    cin >> expression;
+    
+    ExpressionEvaluation ee;
+    ee.plusAndSubtraction(expression);
+}
 int main() {
+    run();
     return 0;
 }
