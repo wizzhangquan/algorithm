@@ -4,7 +4,6 @@
 #include <sstream>
 
 /*
- *
  * 给定一个字符串str，str表示一个表达式，其中只可能有整数、加减乘除符号和
  * 左右括号，返回公式的计算结果。 
  *
@@ -24,17 +23,25 @@ using namespace std;
 
 class ExpressionEvaluation {
 public:
-    int plusAndSubtraction(string &expression) { 
-        //这里只有+ - 没有*/()
-        istringstream ostr(expression);    
+    int getValue(string &expression) {
+        istringstream istr(expression);
+        return computerExpression(istr);
+    }
+    int computerExpression(istringstream &istr) { 
+        cout << "----------------------" << endl;
         deque<string> basicExpressQue;
         int num = 0;
         char c;
         
-        while (ostr >> c) {
-            if (c>= '0' && c <= '9') {
+        while (istr >> c && c != ')') {
+            if (c >= '0' && c <= '9') {
                 num = 10*num + c-'0';
-            }else {
+            } else if (c == '(') {
+                num = computerExpression(istr);
+                //expressQueuePush(basicExpressQue, intToStr(num));
+                //num = 0;
+            }
+            else {
                 expressQueuePush(basicExpressQue, intToStr(num));
                 expressQueuePush(basicExpressQue, charToStr(c)); 
                 num = 0;
@@ -45,9 +52,12 @@ public:
         showQue(basicExpressQue);
         cout << "Now shot u the result: ";
         cout << computeByDeque(basicExpressQue) << endl;
+        cout << "-----------------------" << endl << endl;
+        return computeByDeque(basicExpressQue);
     }
 
     void expressQueuePush(deque<string> &que, const string elem) {
+        cout << __func__ << ":begin :" << elem << endl;
         if (que.empty() || elem == "*" || elem == "/"
             || elem == "+" || elem == "-") {
             que.push_back(elem);
@@ -105,6 +115,21 @@ private:
         return ostr.str();
     }
 };
+/*
+void ftest(istringstream &icur) {
+    char a;
+    if (!(icur >> a))
+        return ;
+    cout << a << "->";
+    ftest(icur);
+}
+
+void test_ftest() {
+    string str("Hello,World.");
+    istringstream istr(str);
+    ftest(istr);
+}
+*/
 
 void run() {
     cout << "Please enter expression:" << endl;
@@ -112,8 +137,10 @@ void run() {
     cin >> expression;
     
     ExpressionEvaluation ee;
-    ee.plusAndSubtraction(expression);
+    cout << "getValue : ";
+    cout << ee.getValue(expression) << endl;
 }
+
 int main() {
     run();
     return 0;
