@@ -27,6 +27,7 @@ class Btnode {
     //这种方式为模板类的非约束模板友元函数
     //在类内部声明友元函数模板，可以创建非约束友元函数，
     //即每个函数具体化都是每个类具体化的友元
+    //unsigned N cannot use in array[N]
 
     friend Btnode<Type> *initTree<Type>(const Type elements[], const int sz, int begin); 
     //模板类的约束模板友元函数 可以这样写，
@@ -45,7 +46,7 @@ public:
     }
 
     //~Btnode() { lchild = rchild = NULL; }
-private:
+//private:
     Type data_;
     Btnode *lchild;
     Btnode *rchild;
