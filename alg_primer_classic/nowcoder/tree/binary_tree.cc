@@ -59,7 +59,7 @@ void midorder_traversal(const Btnode<Type> *root) {
     cout << root->data_ << " ";
     midorder_traversal(root->rchild);
 }
-
+/*
 int main() {
     int arr[9] = {1, 2, 3, 4, -1, 6, 7, -1, 9};
 
@@ -70,4 +70,4 @@ int main() {
     cout << endl;
     destoryTree(root);
     return 0;
-}
+}*/
