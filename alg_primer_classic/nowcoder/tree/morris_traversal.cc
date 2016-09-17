@@ -58,13 +58,78 @@ void preorder_morris(btnode *root) {
     }//while
 }//preorder_morris
 
+void midorder_morris(btnode *root) {
+    if (!root) return ;
+
+    btnode *node = root;
+    btnode *precursor = NULL;
+    while (node != NULL) {
+        precursor = find_precursor(node);
+        if (precursor == NULL) {
+            visit(node);
+            node = node->rchild;
+        }else if (precursor->rchild == NULL) {
+            precursor->rchild = node;
+            node = node->lchild;
+        }else if (precursor->rchild == node) {
+            visit(node);
+            precursor->rchild = NULL;
+            node = node->rchild;
+        }else {
+            cout << "ERROR" << endl;
+            return ;
+        }
+    }//while
+}//midorder_morris
+
+//逆序当前结点的右边界，并返回右边界的最后结点
+//end_rchild标识右边界最后结点的rchild的指针
+btnode *reverse_right_boundary(btnode *node, btnode *end_rchild = NULL) {
+    btnode *before = NULL, *current = node, *after = NULL;
+    while (current != NULL && current != end_rchild) {
+        after = current->rchild;
+        current->rchild = before;
+        before = current;
+        current = after;
+    }
+    return before; 
+}
+
+void visit_right_boundary(btnode *node) {
+    while (node) {
+        visit(node);
+        node = node->rchild;
+    }
+}
+
+void test_rboundary(btnode *node) {
+    btnode *rboundary_head = reverse_right_boundary(node);
+    cout << "visit reverse right boundary:" << endl;
+    visit_right_boundary(rboundary_head);
+    cout << endl << "reverse to original tree" << endl;
+    reverse_right_boundary(rboundary_head);
+    cout << "now test preorder all tree:" << endl;
+    preorder_traversal(node);
+    cout << endl;
+}
+
 int main() {
     int arr1[] = {1,2,3,4,5,6,7,8,9};
     Btnode<int> *root = initTree(arr1, 9);
+
     cout << "recursion preorder traversal:" << endl;
     preorder_traversal(root);
     cout << endl << "morris preorder traversal:" << endl;
     preorder_morris(root);
+
+    cout << endl << "recursion midorder traversal:" << endl;
+    midorder_traversal(root);
+    cout << endl << "morris midorder traversal:" << endl;
+    midorder_morris(root);
     cout << endl;
+
+    test_rboundary(root);
+
+    destoryTree(root);
     return 0;
 }
