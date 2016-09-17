@@ -95,13 +95,45 @@ btnode *reverse_right_boundary(btnode *node, btnode *end_rchild = NULL) {
     return before; 
 }
 
-void visit_right_boundary(btnode *node) {
+inline void visit_right_boundary(btnode *node) {
     while (node) {
         visit(node);
         node = node->rchild;
     }
 }
 
+void reverse_visit_rboundary(btnode *node, btnode *end_rchild = NULL) {
+    btnode *reversed_head = reverse_right_boundary(node, end_rchild);
+    visit_right_boundary(reversed_head);
+    reverse_right_boundary(reversed_head);
+}
+
+void postorder_morris(btnode *root) {
+    if (!root) return ;
+    
+    btnode *node = root;
+    btnode *precursor = NULL;
+    while (node != NULL) {
+        precursor = find_precursor(node);
+        if (precursor == NULL) {
+            node = node->rchild;
+        }else if (precursor->rchild == NULL) {
+            precursor->rchild = node;
+            node = node->lchild;
+        }else if (precursor->rchild == node) {
+            //在这种状态下，逆序打印当前结点的左子树的
+            //右边界
+            //为了使空间复杂度为O(1)，我们先将右边界逆序
+            //打印完后再逆序回来
+            reverse_visit_rboundary(node->lchild, node);            
+            node = node->rchild;
+        }
+    }
+    reverse_visit_rboundary(root, NULL);
+}
+
+//测试逆序函数是否成功
+/*
 void test_rboundary(btnode *node) {
     btnode *rboundary_head = reverse_right_boundary(node);
     cout << "visit reverse right boundary:" << endl;
@@ -112,9 +144,10 @@ void test_rboundary(btnode *node) {
     preorder_traversal(node);
     cout << endl;
 }
+*/
 
 int main() {
-    int arr1[] = {1,2,3,4,5,6,7,8,9};
+    int arr1[] = {1,2,3,4,-1,6,-1,-1,9};
     Btnode<int> *root = initTree(arr1, 9);
 
     cout << "recursion preorder traversal:" << endl;
@@ -126,9 +159,12 @@ int main() {
     midorder_traversal(root);
     cout << endl << "morris midorder traversal:" << endl;
     midorder_morris(root);
-    cout << endl;
 
-    test_rboundary(root);
+    cout << endl << "recursion postorder traversal:" << endl;
+    postorder_traversal(root);
+    cout << endl << "morris postorder traversal:" << endl;
+    postorder_morris(root);
+    cout << endl;
 
     destoryTree(root);
     return 0;

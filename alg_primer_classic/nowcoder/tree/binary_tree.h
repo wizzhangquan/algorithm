@@ -20,6 +20,9 @@ template <typename Type>
 void midorder_traversal(const Btnode<Type> *root);
 
 template <typename Type>
+void postorder_traversal(const Btnode<Type> *root);
+
+template <typename Type>
 class Btnode {
 
     template <typename T, unsigned N>
@@ -39,7 +42,7 @@ class Btnode {
     friend void destoryTree<>(Btnode<Type> *root);
     friend void preorder_traversal<>(const Btnode<Type> *root);
     friend void midorder_traversal<>(const Btnode<Type> *root);
-
+    friend void postorder_traversal<>(const Btnode<Type> *root);
 public:
     Btnode(Type data = 0) : 
         data_(data), lchild(NULL), rchild(NULL) { 

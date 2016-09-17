@@ -60,6 +60,13 @@ void midorder_traversal(const Btnode<Type> *root) {
     midorder_traversal(root->rchild);
 }
 
+template <typename Type>
+void postorder_traversal(const Btnode<Type> *root) {
+    if (root == NULL) return ;
+    postorder_traversal(root->lchild);
+    postorder_traversal(root->rchild);
+    cout << root->data_ << " ";
+}
 /*
 int main() {
     int arr[9] = {1, 2, 3, 4, -1, 6, 7, -1, 9};
