@@ -55,4 +55,6 @@ public:
     Btnode *rchild;
 };
 
+typedef Btnode<int> btnode; 
+
 #endif
